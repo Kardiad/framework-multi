@@ -1,0 +1,48 @@
+{
+    "folders_autoload": [
+        "COMMAND", 
+        "DB", 
+        "RANDOMIZE", 
+        "SQLANALIZE", 
+        "THREAD",
+        "SERVER"
+    ],
+
+    "server" : {
+        "cache" : true,
+        "cachePath" : "cache{{SEPARATOR}}data"
+    },
+
+    "paths" : {
+        "app" : "",
+        "public" : "public", 
+        "controllers" : "controller",
+        "commands" : "commands",
+        "templates": "templates"
+    },
+
+    "dbconnection" : [
+        {
+            "connectionName" : "default",
+            "driver" : "pdo",
+            "host": "localhost",
+            "port": 3306,
+            "user": "root",
+            "password": "root",
+            "database": "mydb"
+        }
+    ],
+
+    "commandValidValues" : [
+        {
+            "fieldName" : "--quantity",
+            "description" : "This command will set the quantity of threads",
+            "ruleProgrammation" : [
+                {
+                    "execute" : ""
+                }
+            ]
+        }
+    ]
+
+}
