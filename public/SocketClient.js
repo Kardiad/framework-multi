@@ -22,13 +22,14 @@ export class SocketClient{
             console.log(res)
             this.data = res;
         })
+        console.log(this.socket);
     }
 
     getData = () =>{
         return this.data
     }
 
-    sendMessage = (data) => {
+    sendMessage = (data) => {        
         this.socket.send(data)
     }
 

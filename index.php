@@ -9,5 +9,3 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 if(!$_SERVER || isset($_SERVER['PROCESSOR_IDENTIFIER'])){
     $app->command->run($argv, $app);
 }
-
-$app->websocket->run();

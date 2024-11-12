@@ -40,17 +40,26 @@
             "protocol" : "tcp",
             "type" : "full-duplex",
             "port" : 8080,
-            "domain" : "inet"
+            "domain" : "inet",
+            "endpoint" : "test"
+        },
+        {
+            "host" : "127.0.0.1",
+            "protocol" : "tcp",
+            "type" : "full-duplex",
+            "port" : 8081,
+            "domain" : "inet",
+            "endpoint" : "test2"
         }
     ],
 
     "commandValidValues" : [
         {
-            "fieldName" : "--quantity",
-            "description" : "This command will set the quantity of threads",
+            "fieldName" : "socket:start",
+            "description" : "This command will perform a socket start.",
             "ruleProgrammation" : [
                 {
-                    "execute" : ""
+                    "execute" : "$app->websocket->run();"
                 }
             ]
         }
