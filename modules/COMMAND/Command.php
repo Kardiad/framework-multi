@@ -29,8 +29,7 @@ class Command extends ModuleLoader{
     }
 
     public function run(mixed $arguments, $app){
-        self::argumentsSetter($arguments);
-        //var_dump(self::$arguments);
-        //self::launchCommand($app);
+        self::argumentsSetter($arguments);        
+        self::launchCommand($app);
     }
 }
