@@ -20,12 +20,19 @@ class Response{
         require_once self::$basePath.DIRECTORY_SEPARATOR.self::$config->paths->templates.DIRECTORY_SEPARATOR.$template;
     }
 
-    public static function html(){
+    public static function htmlTemplate(string $template){
         header('Content-Type:text/html');
+        echo file_get_contents(self::$basePath.DIRECTORY_SEPARATOR.self::$config->paths->templates.DIRECTORY_SEPARATOR.$template);
     }
 
-    public static function text(){
+    public static function htmlPlain(string $content){
+        header('Content-Type:text/html');
+        echo $content;
+    }
+
+    public static function text(string $string){
         header('Content-Type:plain/text');
+        echo $string;
     }
 
     public static function xml(){
