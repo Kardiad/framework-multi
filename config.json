@@ -5,7 +5,8 @@
         "RANDOMIZE", 
         "SQLANALIZE", 
         "THREAD",
-        "SERVER"
+        "SERVER",
+        "WEBSOCKET"
     ],
 
     "server" : {
@@ -30,6 +31,16 @@
             "user": "root",
             "password": "root",
             "database": "mydb"
+        }
+    ],
+
+    "websocket" : [
+        {
+            "host" : "127.0.0.1",
+            "protocol" : "tcp",
+            "type" : "full-duplex",
+            "port" : 8080,
+            "domain" : "inet"
         }
     ],
 

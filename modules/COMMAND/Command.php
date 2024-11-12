@@ -1,19 +1,12 @@
 <?php
 
-class Command {
+use Interfaces\ModuleLoader;
 
-    private static stdClass $config;
-
-    private static string $module;
-
-    private static string $basePath;
-
+class Command extends ModuleLoader{
     private static array $arguments;
 
     public function __construct(stdClass $config, string $module, string $basePath){
-        self::$config = $config;
-        self::$module = $module;
-        self::$basePath = $basePath;
+        parent::__construct($config, $module, $basePath);
     }
 
     private function argumentsSetter(mixed $arguments){

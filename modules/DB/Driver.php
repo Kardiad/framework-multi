@@ -6,11 +6,9 @@ class Driver extends ModuleLoader{
 
     private static string $driver = '';
 
-    private static stdClass $config;
-
     public function __construct(stdClass $config, string $module, string $basePath){
-        self::$config = $config;
-        parent::loadModules($module, $basePath);        
+        parent::__construct($config, $module, $basePath);
+        parent::loadModules();        
     }
 
     public function getStmt(){

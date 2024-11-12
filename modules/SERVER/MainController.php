@@ -5,28 +5,19 @@ use Interfaces\ModuleLoader;
 class MainController extends ModuleLoader{
 
     protected static stdClass $query;
-
     protected static stdClass $parts;
-
     protected static stdClass $headers;
-
     protected static stdClass $paths;
-
-    protected static stdClass $config;
-
-    protected static string $basePath;
-
     protected static Response $response;
 
     public function __construct(stdClass $config, string $module, string $basePath){
-        self::loadModules($module, $basePath);     
-        self::$config = $config;
-        self::$basePath = $basePath;
+        parent::__construct($config, $module, $basePath);
+        self::loadModules();
         self::$response = new Response($config, $basePath);
     }
 
     public function http(){
-        self::$paths = (object) self::objetizeAndBuildPaths(self::$config->paths, self::$basePath);
+        self::$paths = (object) self::objetizeAndBuildPaths(parent::$config->paths, parent::$basePath);
         self::$headers = (object) self::objetizeHeaders(getallheaders()); 
         self::objetizeAndGetParts();
         self::objetizeAndGetQuery();
