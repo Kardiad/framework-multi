@@ -14,6 +14,7 @@ class RouteLauncher{
             self::reflectionAndLaunch($class, $parts, $config);
         }
         if(!self::$found){            
+            ob_end_clean();
             echo file_get_contents($config->templates."/404.html");
         }
     }
