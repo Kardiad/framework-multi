@@ -1,0 +1,1 @@
+<h1>Bienvenido <?=$data->name?></h1>

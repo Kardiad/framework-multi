@@ -12,14 +12,17 @@ class MainController extends ModuleLoader{
 
     protected static stdClass $paths;
 
-    private static stdClass $config;
+    protected static stdClass $config;
 
-    private static string $basePath;
+    protected static string $basePath;
+
+    protected static Response $response;
 
     public function __construct(stdClass $config, string $module, string $basePath){
+        self::loadModules($module, $basePath);     
         self::$config = $config;
         self::$basePath = $basePath;
-        self::loadModules($module, $basePath);       
+        self::$response = new Response($config, $basePath);
     }
 
     public function http(){

@@ -27,7 +27,7 @@ class RouteLauncher{
                 $data = $path->newInstance();
                 if(self::routeValidation($data, $incomingPath)){   
                     self::$found = true;                
-                    $method->invoke(null);
+                    $method->invoke($config);
                 }
             }
         }
