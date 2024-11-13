@@ -6,6 +6,7 @@ export class SocketClient{
 
     constructor(url, options = []){
         this.socket = new WebSocket(url, options);
+        console.log(this.socket);
         this.socket.addEventListener('open', (res)=>{
             console.log(res)
             this.data = res;

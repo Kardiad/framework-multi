@@ -10,6 +10,10 @@ class WebSocket extends ModuleLoader{
 
     public function __construct(stdClass $config, string $module, string $basePath){
         parent::__construct($config, $module, $basePath);
+        
+    }
+
+    private static function builder(){
         if(function_exists('socket_create')){
             self::createSockets();
         }else{
@@ -39,7 +43,16 @@ class WebSocket extends ModuleLoader{
         }
     }
 
-    public static function run():never{
+    public static function stop(){
+        foreach(self::$socketPool as $id => $socket){
+            socket_close($socket);
+            self::$socketPool[$id] = null;
+        }
+        echo time()." -> Sockets destruidos";
+    }
+
+    public static function run():never{     
+        self::builder();   
         while(true){
             $readSockets = array_merge(array_values(self::$socketPool), array_values(self::$clients));
             $write = null;

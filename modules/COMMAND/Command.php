@@ -13,7 +13,7 @@ class Command extends ModuleLoader{
         unset($arguments[0]);
         foreach($arguments as $val){
             $baseArgument = explode('=',$val);            
-            self::$arguments[$baseArgument[0]] = $baseArgument[1];
+            self::$arguments[$baseArgument[0]] = $baseArgument[1] ?? null;
         }
     }
 
@@ -29,7 +29,8 @@ class Command extends ModuleLoader{
     }
 
     public function run(mixed $arguments, $app){
-        self::argumentsSetter($arguments);        
+        self::argumentsSetter($arguments);
+        //var_dump(self::$arguments);
         self::launchCommand($app);
     }
 }
