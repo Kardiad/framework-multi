@@ -6,15 +6,11 @@ export class SocketClient{
 
     constructor(url, options = []){
         this.socket = new WebSocket(url, options);
-        console.log(this.socket);
         this.socket.addEventListener('open', (res)=>{
             console.log(res)
             this.data = res;
         })
-        this.socket.addEventListener('message', (res)=>{
-            console.log(res)
-            this.data = res;
-        })
+       
         this.socket.addEventListener('error', (res)=>{
             console.log(res)
             this.data = res;
@@ -30,7 +26,10 @@ export class SocketClient{
         return this.data
     }
 
-    sendMessage = (data) => {        
+    sendMessage = (data, callback) => { 
+        this.socket.addEventListener('message', (res)=>{
+            callback(res);
+        })
         this.socket.send(data)
     }
 

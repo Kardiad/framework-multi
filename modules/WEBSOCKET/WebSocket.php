@@ -51,7 +51,7 @@ class WebSocket extends ModuleLoader{
         echo time()." -> Sockets destruidos";
     }
 
-    public static function run():never{     
+    public static function run():never{  
         self::builder();   
         while(true){
             $readSockets = array_merge(array_values(self::$socketPool), array_values(self::$clients));

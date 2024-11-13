@@ -19,8 +19,7 @@ class RouteLauncher{
             self::reflectionAndLaunch($class, $parts, $config);
         }
         
-        if(!self::$found){            
-            //ob_end_clean();
+        if(!self::$found){    
             echo file_get_contents($config->templates."/404.html");
         }
     }
@@ -36,8 +35,7 @@ class RouteLauncher{
                     $method->invoke($config);
                 }                
             }
-        }
-        
+        }        
     }
 
     private static function routeValidation(Route $data, string $path){

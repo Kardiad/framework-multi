@@ -2,7 +2,9 @@
 require_once 'Application.php';
 $app = Application::getInstance();
 //Run http server
-if(isset($_SERVER['REMOTE_ADDR']) && !$app->server::loadAndValidateFile()){
+$app->server::loadAndValidateFile();
+$fileOpen = $app->server::getIsFile();
+if(isset($_SERVER['REMOTE_ADDR']) && !$fileOpen){
     $app->server->http();
 }
 //Run cli
