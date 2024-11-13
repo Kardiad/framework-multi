@@ -13,14 +13,31 @@ class MainController extends ModuleLoader{
     public function __construct(stdClass $config, string $module, string $basePath){
         parent::__construct($config, $module, $basePath);
         self::loadModules();
+        self::setters();
         self::$response = new Response($config, $basePath);
     }
 
-    public function http(){
+    private static function setters(){
         self::$paths = (object) self::objetizeAndBuildPaths(parent::$config->paths, parent::$basePath);
         self::$headers = (object) self::objetizeHeaders(getallheaders()); 
         self::objetizeAndGetParts();
         self::objetizeAndGetQuery();
+    }
+
+    public static function loadAndValidateFile(){              
+        $wrapper = (array)self::$parts;
+        unset($wrapper['']);
+        $reservedPaths = array_keys((array) parent::$config->paths);
+        if(!empty($wrapper) && in_array(current($wrapper),$reservedPaths)){
+            ob_end_clean();
+            //TODO definir tipo de header por fichero sacando extensión del mismo e implementar eso en el config.json
+            header('Content-Type:text/javascript');
+            echo file_get_contents(self::$basePath.DIRECTORY_SEPARATOR.implode(DIRECTORY_SEPARATOR, $wrapper));
+        }
+        return !empty($wrapper) && in_array(current($wrapper),$reservedPaths) ;                
+    }
+
+    public function http(){    
         RouteLauncher::launchController(self::$paths, self::$parts, self::$query);
     }
 

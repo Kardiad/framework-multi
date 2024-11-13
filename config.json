@@ -64,11 +64,20 @@
             ]
         },
         {
+            "fieldName" : "socket:stop",
+            "description" : "This command will perform a socket stop.",
+            "ruleProgrammation" : [
+                {
+                    "execute" : "$app->websocket->stop();"
+                }
+            ]
+        },
+        {
             "fieldName" : "serve:start",
             "description" : "This command will start the http proyect",
             "ruleProgrammation" : [
                 {
-                    "execute" : "exec('php -S localhost:8000 -t ./');"
+                    "execute" : "exec('php -S localhost:8000 cli');"
                 }
             ]
         }
