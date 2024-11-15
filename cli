@@ -2,6 +2,7 @@
 require_once 'Application.php';
 $app = Application::getInstance();
 //Run http server
+var_dump($app->db::getInstancesOfDb());
 $app->server::loadAndValidateFile();
 $fileOpen = $app->server::getIsFile();
 if(isset($_SERVER['REMOTE_ADDR']) && !$fileOpen){
