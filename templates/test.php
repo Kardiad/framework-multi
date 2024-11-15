@@ -9,7 +9,10 @@
 <body>
     <h1>Bienvenido</h1>
     <img src="/public/img/patata.jpg" width="300px" alt="">
-    <?php foreach((array)$data as $user):?>
+    <pre>
+        <?=print_r((array)$data->metadata);?>
+    </pre>
+    <?php foreach((array)$data->data as $user):?>
         <p><?= $user['nombre']?></p>
     <?php endforeach;?>
     <script type="module">

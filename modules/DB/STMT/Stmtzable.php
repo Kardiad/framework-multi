@@ -4,6 +4,7 @@ class Stmtzable{
 
     private static object $connection;
     private static PDOStatement | null $statement;
+    private static stdClass $metadata;
 
     public function __construct(object $connection){
         self::$connection = $connection;
@@ -12,6 +13,16 @@ class Stmtzable{
     public function query(string $sql){
         self::$statement = self::$connection->prepare($sql);
         return $this;
+    }
+
+    private static function getMetadata(){
+        //TODO refactor to do a metadata class
+        $metadata = [];
+        $metadata['columnCount'] = self::$statement->columnCount();
+        for($x=0; $x<$metadata['columnCount']; ++$x){
+            $metadata['columnMetadata'][] = self::$statement->getColumnMeta($x);
+        }
+        self::$metadata = (object) $metadata;
     }
 
     public function bind(stdClass $params){
@@ -26,10 +37,15 @@ class Stmtzable{
 
     public function launch(){        
         if(self::$statement->execute()){
-            $result = self::$statement->fetchAll();
+            self::getMetadata();
+            $result['data'] = self::$statement->fetchAll();
+            $result['metadata'] = self::$metadata;
             self::$statement = null;
             return $result;
         }
+        self::getMetadata();
+        $result['metadata'] = self::$metadata;
+        $result['data'] = [];
         self::$statement = null;
         return [];
     }
