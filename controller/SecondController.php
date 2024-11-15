@@ -14,7 +14,12 @@ class SecondController extends MainController{
         "METHOD" => ["GET"],
         "PATH" => '/patata/curro'
     ])]
-    public static function htmlTemplate(){        
-        self::$response::template('test.php', (object)['name'=>'curro']);
+    public static function htmlTemplate(){     
+        $data = Driver::getInstancesOfDb()
+            ->default
+            ->query('SELECT * FROM usuarios')
+            ->bind(new stdClass)
+            ->launch();
+        self::$response::template('test.php', (object)$data);
     }
 }
