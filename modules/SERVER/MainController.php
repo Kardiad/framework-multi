@@ -31,14 +31,19 @@ class MainController extends ModuleLoader{
         $reservedPaths = array_keys((array) parent::$config->paths);
         if(!empty($wrapper) && in_array(current($wrapper),$reservedPaths)){
             self::$isFile = true;
-            ob_end_clean();
+            //ob_end_clean();
             $file = end($wrapper);
             $fileSplited = explode('.',$file);
-            $extension = end($fileSplited);
-            //TODO definir tipo de header por fichero sacando extensión del mismo e implementar eso en el config.json
+            $extension = end($fileSplited);            
             $mime = Mime::getMimeByExtension($extension);
-            header("Content-Type:$mime");
-            echo file_get_contents(self::$basePath.DIRECTORY_SEPARATOR.implode(DIRECTORY_SEPARATOR, $wrapper));
+            $fileContent = @file_get_contents(self::$basePath.DIRECTORY_SEPARATOR.implode(DIRECTORY_SEPARATOR, $wrapper));
+            if(!$fileContent){
+                http_response_code(404);
+                echo file_get_contents(self::$basePath.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.'404.html');
+            }else{
+                header("Content-Type:$mime");
+                echo $fileContent;
+            }
         }                
     }
 

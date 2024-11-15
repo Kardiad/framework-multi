@@ -62,7 +62,7 @@ class WebSocket extends ModuleLoader{
             // Acepta nuevos clientes en los sockets del pool
             foreach (self::$socketPool as $endpoint => $serverSocket) {
                 if (in_array($serverSocket, $readSockets)) {
-                    $newClient = socket_accept($serverSocket);                                        
+                    $newClient = socket_accept($serverSocket);
                     $clientId = uniqid();
                     self::$clients[$clientId] = $newClient;
                     echo "Nuevo cliente $clientId conectado en endpoint: $endpoint\n";
@@ -72,16 +72,15 @@ class WebSocket extends ModuleLoader{
             // Lee datos de cada cliente y maneja mensajes
             foreach (self::$clients as $clientKey => $clientSocket) {
                 if (in_array($clientSocket, $readSockets)) {
-                    $data = socket_read($clientSocket, 1024);
-                    
+                    $data = socket_read($clientSocket, 1024);                    
                     if ($data === false || $data === "") {
                         unset(self::$clients[$clientKey]);
                         socket_close($clientSocket);
                         echo "Cliente desconectado\n";
                         continue;
                     }
-
                     $message = json_decode($data, true);
+                    echo $message;
                     self::handleClientMessage($clientSocket, $message);
                 }
             }
