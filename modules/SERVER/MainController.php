@@ -10,6 +10,8 @@ class MainController extends ModuleLoader{
     protected static stdClass $paths;
     protected static Response $response;
 
+    protected static bool $isFile = false;
+
     public function __construct(stdClass $config, string $module, string $basePath){
         parent::__construct($config, $module, $basePath);
         self::loadModules();
@@ -19,7 +21,6 @@ class MainController extends ModuleLoader{
 
     private static function setters(){
         self::$paths = (object) self::objetizeAndBuildPaths(parent::$config->paths, parent::$basePath);
-        self::$headers = (object) self::objetizeHeaders(getallheaders()); 
         self::objetizeAndGetParts();
         self::objetizeAndGetQuery();
     }
@@ -29,15 +30,29 @@ class MainController extends ModuleLoader{
         unset($wrapper['']);
         $reservedPaths = array_keys((array) parent::$config->paths);
         if(!empty($wrapper) && in_array(current($wrapper),$reservedPaths)){
-            ob_end_clean();
-            //TODO definir tipo de header por fichero sacando extensión del mismo e implementar eso en el config.json
-            header('Content-Type:text/javascript');
-            echo file_get_contents(self::$basePath.DIRECTORY_SEPARATOR.implode(DIRECTORY_SEPARATOR, $wrapper));
-        }
-        return !empty($wrapper) && in_array(current($wrapper),$reservedPaths) ;                
+            self::$isFile = true;
+            //ob_end_clean();
+            $file = end($wrapper);
+            $fileSplited = explode('.',$file);
+            $extension = end($fileSplited);            
+            $mime = Mime::getMimeByExtension($extension);
+            $fileContent = @file_get_contents(self::$basePath.DIRECTORY_SEPARATOR.implode(DIRECTORY_SEPARATOR, $wrapper));
+            if(!$fileContent){
+                http_response_code(404);
+                echo file_get_contents(self::$basePath.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.'404.html');
+            }else{
+                header("Content-Type:$mime");
+                echo $fileContent;
+            }
+        }                
+    }
+
+    public static function getIsFile(){
+        return self::$isFile;
     }
 
     public function http(){    
+        self::$headers = (object) self::objetizeHeaders(getallheaders()); 
         RouteLauncher::launchController(self::$paths, self::$parts, self::$query);
     }
 
