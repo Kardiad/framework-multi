@@ -16,11 +16,18 @@ class SecondController extends MainController{
     ])]
     public static function htmlTemplate(){     
         $params = new stdClass;
-        $params->id = 5;
-        $params->nombre = '%at%';
+        $params->id = 1;       
         $data = Driver::getInstancesOfDb()
             ->default
-            ->query('SELECT * FROM usuarios WHERE id = :id and nombre like :nombre')
+            ->query('SELECT 
+                u.nombre as usuario_nombre, 
+                p.nombre as producto_nombre,
+                up.usuario_id as join_usuario,
+                up.producto_id as join_producto
+                FROM usuarios u
+                JOIN usuarios_productos up ON u.id = up.usuario_id
+                JOIN productos p ON p.id = up.producto_id 
+                where u.id = :id;')
             ->bind($params)
             ->launch();
         self::$response::template('test.php', (object)$data);
