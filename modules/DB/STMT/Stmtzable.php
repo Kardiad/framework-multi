@@ -2,51 +2,70 @@
 
 class Stmtzable{
 
-    private static object $connection;
-    private static PDOStatement | null $statement;
-    private static stdClass $metadata;
+    private object $connection;
+    private PDOStatement | null $statement;
+    private stdClass $metadata;
+    private stdClass $config;
+    private Query $orm;
 
-    public function __construct(object $connection){
-        self::$connection = $connection;
+    public function __construct(stdClass $config){
+        $this->config = $config;
+        $this->factory();
+    }
+
+    private function factory(){
+        switch($this->config->driver){
+            case 'pdo-mysql':
+                $this->connection = new PDO("mysql:dbname=".$this->config->database.";host=".$this->config->host, $this->config->user, $this->config->password, $this->config->options);
+                break;
+        }
     }
 
     public function query(string $sql){
-        self::$statement = self::$connection->prepare($sql);
+        $this->statement = $this->connection->prepare($sql);
         return $this;
     }
 
-    private static function getMetadata(){
+    public function getRepository(string $className){
+        $this->orm = new Query($className);
+    }
+
+    private function getMetadata(){
         //TODO refactor to do a metadata class
         $metadata = [];
-        $metadata['columnCount'] = self::$statement->columnCount();
+        $metadata['columnCount'] = $this->statement->columnCount();
         for($x=0; $x<$metadata['columnCount']; ++$x){
-            $metadata['columnMetadata'][] = self::$statement->getColumnMeta($x);
+            $metadata['columnMetadata'][] = $this->statement->getColumnMeta($x);
         }
-        self::$metadata = (object) $metadata;
+        $this->metadata = (object) $metadata;
     }
 
     public function bind(stdClass $params){
         $params = (array) $params;
         foreach($params as $key => $value){
-            if(!self::$statement->bindValue(':'.$key, $value)){
+            if(!$this->statement->bindValue(':'.$key, $value)){
                 throw new Error("the param $key with $value can not be bound", 500);
             }
         }
         return $this;
     }
 
+    public function getDBName(){
+        return $this->config->connectionName;
+    }
+
     public function launch(){        
-        if(self::$statement->execute()){
-            self::getMetadata();
-            $result['data'] = self::$statement->fetchAll();
-            $result['metadata'] = self::$metadata;
-            self::$statement = null;
+        if($this->statement->execute()){
+            $this->getMetadata();
+            $result['data'] = $this->statement->fetchAll();
+            $result['metadata'] = $this->metadata;
+            $this->statement = null;
             return $result;
         }
-        self::getMetadata();
-        $result['metadata'] = self::$metadata;
+        $this->getMetadata();
+        $result['metadata'] = $this->metadata;
         $result['data'] = [];
-        self::$statement = null;
+        $this->statement = null;
         return [];
     }
 

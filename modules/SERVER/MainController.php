@@ -9,8 +9,7 @@ class MainController extends ModuleLoader{
     protected static stdClass $headers;
     protected static stdClass $paths;
     protected static Response $response;
-
-    protected static bool $isFile = false;
+    protected bool $isFile = false;
 
     public function __construct(stdClass $config, string $module, string $basePath){
         parent::__construct($config, $module, $basePath);
@@ -25,12 +24,12 @@ class MainController extends ModuleLoader{
         self::objetizeAndGetQuery();
     }
 
-    public static function loadAndValidateFile(){              
+    public function loadAndValidateFile(){              
         $wrapper = (array)self::$parts;
         unset($wrapper['']);
         $reservedPaths = array_keys((array) parent::$config->paths);
         if(!empty($wrapper) && in_array(current($wrapper),$reservedPaths)){
-            self::$isFile = true;
+            $this->isFile = true;
             //ob_end_clean();
             $file = end($wrapper);
             $fileSplited = explode('.',$file);
@@ -47,8 +46,8 @@ class MainController extends ModuleLoader{
         }                
     }
 
-    public static function getIsFile(){
-        return self::$isFile;
+    public function getIsFile(){
+        return $this->isFile;
     }
 
     public function http(){    
