@@ -6,10 +6,11 @@ class Stmtzable{
     private PDOStatement | null $statement;
     private stdClass $metadata;
     private stdClass $config;
-    private Query $orm;
+    private string $basePath;
 
-    public function __construct(stdClass $config){
+    public function __construct(stdClass $config, string $basePath){
         $this->config = $config;
+        $this->basePath = $basePath;
         $this->factory();
     }
 
@@ -17,6 +18,8 @@ class Stmtzable{
         switch($this->config->driver){
             case 'pdo-mysql':
                 $this->connection = new PDO("mysql:dbname=".$this->config->database.";host=".$this->config->host, $this->config->user, $this->config->password, $this->config->options);
+                break;
+            case 'pdo-postgre':
                 break;
         }
     }
@@ -27,11 +30,10 @@ class Stmtzable{
     }
 
     public function getRepository(string $className){
-        $this->orm = new Query($className);
+        return new Query($className, $this->config, $this->basePath);
     }
 
     private function getMetadata(){
-        //TODO refactor to do a metadata class
         $metadata = [];
         $metadata['columnCount'] = $this->statement->columnCount();
         for($x=0; $x<$metadata['columnCount']; ++$x){

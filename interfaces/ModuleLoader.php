@@ -18,13 +18,14 @@ abstract class ModuleLoader{
 
     protected static function loadModules(){
         // Load modules
-        $modulePath = self::$basePath."/modules/".self::$module.'/';
+        $modulePath = self::$basePath."/modules/".self::$module.'/';        
         foreach(scandir($modulePath) as $moduleFile){ 
             if(!str_contains('./', $moduleFile)){
-                foreach(glob("$modulePath$moduleFile/*.php") as $class){                    
+                foreach(glob("$modulePath$moduleFile/*.php") as $class){
                     require_once $class;
                 }
             }
         }
-    }    
+    }     
+    
 }
