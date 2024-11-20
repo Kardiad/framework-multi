@@ -1,20 +1,30 @@
 <?php
 
-class Properties{
+class Properties
+{
 
     private ReflectionClass $properties;
     private array $propertiesArray;
 
-    public function __construct(private string $className){
+    public function __construct(private string $className)
+    {
         $this->start();
     }
 
-    public function start(){
+    public function start()
+    {
         $this->properties = new ReflectionClass($this->className);
-        $this->propertiesArray = array_map(function($propertie){
-            return $propertie->getAttributes(OrmAttr::class)[0];
-        }, $this->properties->getProperties());
-        echo '<pre>'; print_r( $this->propertiesArray); echo '</pre>';
+        $this->propertiesArray = array_map(
+            fn($propertie) => $propertie->getAttributes(OrmAttr::class)[0]->newInstance(),
+            $this->properties->getProperties()
+        );
+        
     }
 
+    public function getClass(){
+        return (object)[
+            'class' => $this->className,
+            'properties' => $this->propertiesArray
+        ];
+    }
 }
