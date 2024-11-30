@@ -9,11 +9,16 @@
 <body>
     <h1>Bienvenido</h1>
     <img src="/public/img/patata.jpg" width="300px" alt="">
+    <!--
+    <pre>
+        <?=print_r($data->metadata)?>
+    </pre>
+    -->
     <?php foreach((array)$data->data as $user):?>
         <p><?= $user['usuario_nombre'] . ' '. $user['producto_nombre']?></p>        
     <?php endforeach;?>
     <script type="module">
-        import {SocketClient} from '/public/SocketClient.js';
+        /*import {SocketClient} from '/public/SocketClient.js';
         const socket = new SocketClient("ws://localhost:8080/test");
         setTimeout(()=>{
             console.log(socket.getData());
@@ -24,7 +29,7 @@
                     "data": "Este es el mensaje" 
                 }
             ), (res) => { console.log(res)})
-        }, 10000)
+        }, 10000)*/
     </script>
 </body>
 </html>

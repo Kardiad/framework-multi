@@ -18,7 +18,7 @@ class Driver extends ModuleLoader{
         $configDBPool = parent::$config->dbconnection;
         $wrapArrayToObjectPool = [];
         foreach($configDBPool as $config){                    
-            $wrapArrayToObjectPool[$config->connectionName] = new Stmtzable($config);
+            $wrapArrayToObjectPool[$config->connectionName] = new Stmtzable($config, parent::$basePath);
         }
         self::$pool = (object)$wrapArrayToObjectPool;
     }

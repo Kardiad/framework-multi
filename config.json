@@ -31,6 +31,7 @@
             "user": "root",
             "password": "root",
             "database": "mydb",
+            "ormFolderEntity":"models",
             "options" : []
         },
         {
@@ -41,6 +42,7 @@
             "user": "root",
             "password": "root",
             "database": "mydb2",
+            "ormFolderEntity":"models",
             "options" : []
         }
     ],
