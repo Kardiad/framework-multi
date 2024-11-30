@@ -24,17 +24,19 @@ class Query extends ModelsLoader{
         foreach($this->entity->properties as $dbField){
             $this->extractSubentity($dbField);            
         }
-        $this->structureByEntity[] = $this->entity;
-        echo '<pre>'; print_r($this->structureByEntity); echo '</pre>';
+        $this->entity->properties = array_filter($this->entity->properties, fn($e)=>$e->joinClass == '');
+        array_unshift($this->structureByEntity, $this->entity);
+        echo '<pre>'; print_r($this->structureByEntity); echo '</pre>'; 
         exit;
     }
 
     private function extractSubentity(object $field){
-        if(@$field->joinClass != ''){
-            $candidateRecursive = $this->getReflectionClass($field->joinClass);
-            $this->entity->properties = array_filter($this->entity->properties, fn($e)=>$e->joinClass != $field->joinClass);
-            $this->structureByEntity[] = $candidateRecursive;
-            $this->extractSubentity($candidateRecursive);
+        if($field->joinClass != ''){
+            $candidateRecursive = $this->getReflectionClass($field->joinClass);            
+            foreach($candidateRecursive->properties as $properties){                
+                $this->extractSubentity($properties);
+            }
+            $this->structureByEntity[] = $candidateRecursive;            
         }
     }
 
