@@ -31,8 +31,7 @@ class SecondController extends MainController{
             ->bind($params)
             ->launch();
         $data['ormValues'] = Driver::getInstancesOfDb()->default->getRepository(UsuariosProductos::class);
-        die();
-        //var_dump($data['ormValues']); die();
+        echo '<pre>'; print_r($data['ormValues']); echo '</pre>'; die();
         self::$response::template('test.php', (object)$data);
     }
 }

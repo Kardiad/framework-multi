@@ -10,7 +10,8 @@ class OrmAttr{
         public bool $auto_increment = false,
         public bool $unique = false,
         public bool $index = false,
-        public string $joinClass = ''
+        public string | object $joinClass = '',
+        public mixed $value = ''
     ){}
 }
 

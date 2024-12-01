@@ -19,6 +19,17 @@ class Usuarios
     #[OrmAttr('pass', 'varchar')]
     private string $pass;
 
+    #[OrmAttr(
+        'imagen_id', 
+        'relationship', 
+        false, 
+        false, 
+        false, 
+        false, 
+        true, 
+        ImagenUsuario::class)]
+    private ImagenUsuario $imagenUsuario;
+
     public function getId()
     {
         return $this->id;
