@@ -30,7 +30,8 @@ class Stmtzable{
     }
 
     public function getRepository(string $className){
-        return new OrmStructure($className, $this->config, $this->basePath, $this->connection);
+        $structure = new OrmStructure($className, $this->config, $this->basePath, $this->connection);
+        return new QueryBuilderByOrm($structure, $this);
     }
 
     private function getMetadata(){

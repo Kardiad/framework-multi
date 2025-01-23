@@ -27,10 +27,13 @@ class SecondController extends MainController{
                 FROM usuarios u
                 JOIN usuarios_productos up ON u.id = up.usuario_id
                 JOIN productos p ON p.id = up.producto_id 
-                where u.id = :id;')
+                where u.id = :id ;')
             ->bind($params)
             ->launch();
-        $data['ormValues'] = Driver::getInstancesOfDb()->default->getRepository(UsuariosProductos::class);
+        $data['ormValues'] = Driver::getInstancesOfDb()
+            ->default
+            ->getRepository(UsuariosProductos::class)
+            ->getAll();
         echo '<pre>'; print_r($data['ormValues']); echo '</pre>'; die();
         self::$response::template('test.php', (object)$data);
     }
