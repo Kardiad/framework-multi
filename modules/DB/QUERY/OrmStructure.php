@@ -10,33 +10,20 @@ class OrmStructure extends ModelsLoader{
 
     private object $possibleQueries;
 
+    private Select $select;
+
     public function __construct(private string $className, private stdClass $config, private string $basePath, PDO $connection){
-        $this->possibleQueries = new stdClass;
-        $this->possibleQueries->select = '';
-        $this->possibleQueries->insert = '';
-        $this->possibleQueries->update = '';
-        $this->possibleQueries->delete = '';
-        $this->possibleQueries->create = '';
+        $this->select = new Select();
         self::loadModels($basePath, $config);
-        $this->setParts();
         $this->matchObjectWithTable();
         $this->recursiveClassEntity();
     }
     private function matchObjectWithTable(){
         $this->entity = $this->getReflectionClass($this->className);
-        $this->parts['from'] = ' FROM '.$this->entity->tableName.' ';
         $this->recursiveClassEntity();
-    }
-
-    private function setParts(){
-        $this->parts['select'] = '';
-        $this->parts['where'] = '';
-        $this->parts['join'] = '';
-        $this->parts['order'] = '';
-        $this->parts['limit'] = '';
-        $this->parts['group'] = '';
-        $this->parts['from'] = '';
-        $this->parts['values'] = '';
+        $this->select->addHeader();
+        echo '<pre>'; print_r($this->select->getPart('parts')); echo '</pre>';
+        exit;
     }
 
     private function recursiveClassEntity(){
@@ -44,14 +31,20 @@ class OrmStructure extends ModelsLoader{
            $subentities = $this->extractSubentity($dbField);            
            $this->entity->properties[$key]->joinClass = $subentities;
         }         
+        
     }
 
     private function extractSubentity(object $field){
         if(@$field->joinClass != '' && !is_object(@$field->joinClass)){ 
             $candidateRecursive = $this->getReflectionClass($field->joinClass);
-            //Add join on field and candidate where index            
+            //Add join on field and candidate where index
             foreach($candidateRecursive->properties as $property){
-                $this->parts['select'].= $candidateRecursive->tableName.'.'.$property->name.','; 
+                $this->pushParts([
+                    'maintable' => $this->entity->tableName,
+                    'select' =>  $candidateRecursive->tableName.'.'.$property->name,
+                    'candidate' => $candidateRecursive,
+                    'property' => $property
+                ]);
                 if($property->joinClass != '' && !is_object($property->joinClass)){                                       
                     $property->joinClass = $this->extractSubentity($property);                   
                 }
@@ -59,6 +52,11 @@ class OrmStructure extends ModelsLoader{
             return $candidateRecursive;
         }
         return $field;
+    }
+
+    private function pushParts(array $data){
+        $this->select->pushParts($data);
+        //add update or other kind of queries
     }
 
     private function getReflectionClass(string $class){
